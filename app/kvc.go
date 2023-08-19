@@ -9,19 +9,19 @@ import (
 
 
 func main() {
-    debugFlag := isDebug()
+    verboseFlag := isVerbose()
 
     if len(os.Args) > 1 {
         switch os.Args[1] {
             case "help":
                 writeHelp()
             case "init":
-                kvcinit.Init(debugFlag)
+                kvcinit.Init(verboseFlag)
             case "add":
                 if len(os.Args) < 3 {
                     fmt.Printf("Missing argument [file] in command 'add'\nRun 'kvc help' for valid commands\n")
                 }
-                kvcadd.Add(os.Args[2:], debugFlag)
+                kvcadd.Add(os.Args[2:], verboseFlag)
         }
     } else {
         writeHelp()
@@ -30,19 +30,20 @@ func main() {
 
 
 func writeHelp() {
-    fmt.Println("kvc [option]\nOptions:")
-    fmt.Println("\tinit: initializes the current working directory as a kvc repository")
-    fmt.Println("\tadd [file1, file2, ...]: adds the given files to the add buffer used when calling 'kvc save'")
-    fmt.Println("\tsave [description]: saves the files in the add buffer to a new save in the store with the given description")
-    fmt.Println("\tload [identifier]: loads a save from the store into a temporary environment, given an identifier")
-    fmt.Println("Flags:")
-    fmt.Println("\t-debug: enables debug mode giving more detailed error messages if something should occur") 
+    fmt.Print("usage: kvc [-v | --verbose] <command> [<args>]\n\n")
+    fmt.Print("initialize a kvc repository\n\tkvc init\n\n")
+    fmt.Print("add or remove files from the save buffer\n")
+    fmt.Print("\tkvc add [<file1> <file2> ... <fileN>]\n")
+    fmt.Print("\tkvc rem [<file1> <file2> ... <fileN>]\n\n")
+    fmt.Print("save or load snapshots from the store\n")
+    fmt.Print("\tkvc save [<description>]\n")
+    fmt.Print("\tkvc load [<identifier>]\n\n")
 }
 
 
-func isDebug() bool {
+func isVerbose() bool {
     for _, flag := range(os.Args[1:]) {
-        if flag == "-debug" || flag == "--debug" {
+        if flag == "-v" || flag == "--verbose" {
             return true
         }
     }
